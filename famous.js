@@ -1,7 +1,7 @@
 const { Client } = require('pg');
 const settings = require("./settings");
 const person = process.argv[2];
-
+const result = require('./return_famous_people');
 
 const client = new Client ({
   user     : settings.user,
@@ -23,14 +23,9 @@ client.connect((err) => {
     if (err) {
       return console.log(err.stack);
     } else {
-      console.log("Searching ...");
-      console.log(`Found ${res.rows.length} person(s) by the name '${person}':`);
-      let count = 1;
-      res.rows.forEach((row) => {
-        console.log(`- ${count}: ${row.first_name} ${row.last_name}, born '${row.birthdate.toISOString().substring(0, 10)}'`);
-        count++;
-      })
+      result.returnFamousPeople(res, person);
+      }
       client.end();
     }
-  })
+  )
 });
